@@ -3,6 +3,7 @@ package plugin.ui.main.handler;
 import com.formdev.flatlaf.util.StringUtils;
 import common.CommonStatic;
 import org.intellij.lang.annotations.MagicConstant;
+import page.MainFrame;
 import plugin.ui.common.config.StaticConfig;
 import plugin.ui.common.util.Analyser;
 import plugin.ui.common.util.Fio.FileUtil;
@@ -189,6 +190,7 @@ public abstract class SwingComponentHandler {
             } else if (jComponent instanceof JSlider) {
                 ((JSlider) jComponent).setValue(opaque);
             }
+            MainFrame.getPanel().fireDimensionChanged();
         }
 
         ImageReader.setAlpha(opaque);
