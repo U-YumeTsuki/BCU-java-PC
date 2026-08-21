@@ -112,6 +112,11 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
+	public void shear(float x, float y) {
+		g.shear(x, y);
+	}
+
+	@Override
 	public void setColor(int c) {
 		if (c == RED)
 			g.setColor(Color.RED);

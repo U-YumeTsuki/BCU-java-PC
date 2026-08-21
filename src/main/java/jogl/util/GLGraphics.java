@@ -377,6 +377,14 @@ public class GLGraphics implements GeoAuto {
 		trans[4] *= vf;
 	}
 
+	@Override
+	public void shear(float x, float y) {
+		if (x != 0)
+			trans[1] += trans[0] * x;
+		if (y != 0)
+			trans[3] += trans[4] * y;
+	}
+
 	private void setColor() {
 		if (color == null)
 			return;

@@ -25,7 +25,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 	private final String[] eases;
 
 	protected MaModelEditTable(Page p) {
-		super(Page.get(MainLocale.PAGE, "mampm", 11));
+		super(Page.get(MainLocale.PAGE, "mampm", 12));
 
 		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setTransferHandler(new AnimTableTH<>(this, 1));
@@ -54,7 +54,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 
 	@Override
 	public Class<?> getColumnClass(int c) {
-		if (lnk[c] == 10 || (lnk[c] >= 4 && lnk[c] <= 6))
+		if (lnk[c] >= 10 || (lnk[c] >= 4 && lnk[c] <= 6))
 			return String.class;
 		return Integer.class;
 	}
@@ -89,8 +89,11 @@ class MaModelEditTable extends AnimTable<int[]> {
 			return mm.parts[r][0];
 		if (lnk[c] == 9)
 			return eases[mm.parts[r][12] + 1 >= eases.length ? 0 : mm.parts[r][12] + 1];
-		if (lnk[c] == 10)
+		if (lnk[c] == 11)
 			return mm.strs0[r];
+		if (lnk[c] == 10) {
+			return "(" + mm.parts[r][14] + ", " + mm.parts[r][15] + ")";
+		}
 		if (lnk[c] >= 4 && lnk[c] <= 6) {
 			int par = c + c - 4;
 			return "(" + mm.parts[r][lnk[par]] + ", " + mm.parts[r][lnk[par + 1]] + ")";
@@ -203,9 +206,16 @@ class MaModelEditTable extends AnimTable<int[]> {
 		if (mm == null || r >= mm.n)
 			return;
 		c = lnk[c];
-		if (c == 10)
+		if (c == 11)
 			mm.strs0[r] = ((String) val).trim();
-		else if (c >= 4 && c <= 6) {
+		else if (c == 10) {
+			int[] ints = CommonStatic.parseIntsN((String)val);
+			if (ints.length == 0)
+				return;
+			mm.parts[r][14] = ints[0];
+			if (ints.length >= 2)
+				mm.parts[r][15] = ints[1];
+		} else if (c >= 4 && c <= 6) {
 			int[] ints = CommonStatic.parseIntsN((String)val);
 			if (ints.length == 0)
 				return;
@@ -247,7 +257,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 	public void paint(Graphics g) {
 		super.paint(g);
 		int x = 0, f = 0;
-		while (lnk[f] != 10)
+		while (lnk[f] != 11)
 			x += getColumnModel().getColumn(lnk[f++]).getWidth();
 		((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		int m = 0xfefefefe, left = x + getInsets().left, ych = getRowHeight() / 2 + g.getFontMetrics().getAscent() / 2 - 2;
