@@ -241,6 +241,9 @@ public class Interpret extends Data {
 
 
 		List<ProcDisplay> l = new ArrayList<>();
+		if (me.getProcCondition(atkind) != null && !me.getProcCondition(atkind).isEmpty())
+			l.add(new ProcDisplay(Page.get(1, "condition") + ": " + me.getProcCondition(atkind), UtilPC.getIcon(0, 0)));
+
 		if (!allRangeSame(me, atkind)) {
 			LinkedHashMap<String, List<Integer>> LDInts = new LinkedHashMap<>();
 			MaskAtk[] atks = me.getAtks(atkind);

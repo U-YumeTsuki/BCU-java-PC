@@ -117,6 +117,7 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 	private final JComboBox<String> atkS = new JComboBox<>();
 	private final JL jsh = new JL(MainLocale.INFO, "er2");
 	private final JTF josh = new JTF();
+	private final JTF jcon = new JTF();
 
 	protected final ArrayList<AtkDataModel> extra = new ArrayList<>();
 
@@ -270,6 +271,9 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 			set(josh);
 			atkS.setSelectedIndex(ce.firstAtk());
 		}
+		set(jcon);
+		jcon.setHintText(get(MainLocale.INFO, "condition"));
+
 		add(aet);
 		add(jspm);
 		add(add);
@@ -412,6 +416,7 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 		set(jsh, x, y, 350, 50, 100, 50);
 		set(josh, x, y, 450, 50, 200, 50);
 		set(atkS, x, y, 650, 50, 400, 50);
+		set(jcon, x, y, 1050, 50, 800, 50);
 
 		set(jspm, x, y, 1850, 100, 350, 900);
 		mpt.componentResized(x, y);
@@ -510,6 +515,8 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 
 		int ind = jli.getSelectedIndex();
 		josh.setVisible(pack.editable && !isSp());
+		jcon.setVisible(!isSp());
+		jcon.setEnabled(pack.editable);
 
 		aet.setVisible(getSelMask() != null);
 		apt.setVisible(getSelMask() != null);
@@ -531,8 +538,11 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 			if (ind >= raw.length)
 				ind = raw.length - 1;
 			josh.setText("" + ce.getShare(getSel()));
-		} else
+			jcon.setText(ce.getProcCondition(getSel()));
+		} else {
 			josh.setText("" + 0);
+			jcon.setText("");
+		}
 		if (ind < 0)
 			ind = 0;
 		setA(ind);
@@ -692,6 +702,7 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 				return;
 			ce.getPack().anim = (AnimCI) jcba.getSelectedItem();
 			ce.share = Arrays.copyOf(ce.share, ce.getPack().anim.anim.getAtkCount());
+			ce.procConditions = Arrays.copyOf(ce.procConditions, ce.share.length);
 			if (ce.hits.size() < ce.share.length)
 				for (int i = ce.hits.size(); i < ce.share.length; i++) {
 					ce.hits.add(new AtkDataModel[1]);
@@ -862,49 +873,39 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 					if (v[0] <= 0)
 						v[0] = 1;
 					ce.hp = v[0];
-				}
-				if (jtf == fhb) {
+				} else if (jtf == fhb) {
 					if (v[0] <= 0)
 						v[0] = 1;
 					ce.hb = v[0];
-				}
-				if (jtf == fsp) {
+				} else if (jtf == fsp) {
 					ce.speed = Math.max(0, v[0]);
-				}
-				if (jtf == fra) {
+				} else if (jtf == fra) {
 					if (v[0] <= 0)
 						v[0] = 1;
 					ce.range = v[0];
-				}
-				if (jtf == fwd) {
+				} else if (jtf == fwd) {
 					if (v[0] <= 0)
 						v[0] = 1;
 					ce.width = v[0];
-				}
-				if (jtf == ftb)
+				} else if (jtf == ftb)
 					ce.tba = v[0];
-				if (jtf == fbs) {
+				else if (jtf == fbs) {
 					if (v[0] < 0)
 						v[0] = 0;
 					ce.base = v[0];
-				}
-				if (jtf == ftp) {
+				} else if (jtf == ftp) {
 					if (v[0] < 1)
 						v[0] = 1;
 					ce.touch = v[0];
-				}
-				if (jtf == fct) {
+				} else if (jtf == fct) {
 					if (v[0] < -1)
 						v[0] = -1;
 					ce.loop = v[0];
-				}
-				if (jtf == fwp) {
-
+				} else if (jtf == fwp) {
 					if (v[0] < 0)
 						v[0] = 0;
 					ce.will = Math.min(v[0] - 1, 49);
-				}
-				if (jtf == josh) {
+				} else if (jtf == josh) {
 					boolean nz = v[0] == 0;
 					if (nz)
 						for (int i = 0; i < ce.share.length; i++)
@@ -921,9 +922,10 @@ public abstract class EntityEditPage extends DefaultPage implements EntSupInt {
 						ce.hits.set(getSel(), adm);
 					}
 				}
-
 				getInput(jtf, v);
 			}
+			if (jtf == jcon)
+				ce.procConditions[getSel()] = text;
 		}
 		setData(ce);
 	}

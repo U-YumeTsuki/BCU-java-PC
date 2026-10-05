@@ -633,6 +633,7 @@ public class UnitManagePage extends DefaultPage {
 		} else if (frm.anim == null || (frm.anim != anim && Opts.conf(get(MainLocale.PAGE, "reasanim")))) {
 			CustomUnit ce = (CustomUnit)frm.du;
 			ce.share = Arrays.copyOf(ce.share, Math.max(1, anim.anim.getAtkCount()));
+			ce.procConditions = Arrays.copyOf(ce.procConditions, ce.share.length);
 			if (ce.hits.size() < ce.share.length)
 				for (int i = ce.hits.size(); i < ce.share.length; i++) {
 					ce.hits.add(new AtkDataModel[1]);

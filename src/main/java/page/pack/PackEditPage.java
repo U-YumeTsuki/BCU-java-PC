@@ -703,6 +703,7 @@ public class PackEditPage extends DefaultPage {
 		} else if (ene.anim == null || (ene.anim != anim && Opts.conf(get(MainLocale.PAGE, "reasanim")))) {
 			CustomEnemy ce = (CustomEnemy)ene.de;
 			ce.share = Arrays.copyOf(ce.share, anim.anim.getAtkCount());
+			ce.procConditions = Arrays.copyOf(ce.procConditions, ce.share.length);
 			if (ce.hits.size() < ce.share.length)
 				for (int i = ce.hits.size(); i < ce.share.length; i++) {
 					ce.hits.add(new AtkDataModel[1]);
